@@ -1,24 +1,24 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
 
-/* ✅ modify this usePokemon custom hook to take in a query as an argument */
-export function usePokemon() {
-  /* ✅ this hook should only return one thing: an object with the pokemon data */
-}
-
-function Pokemon({ query }) {
-  /* 
-   ✅ move the code from the useState and useEffect hooks into the usePokemon hook
-   then, call the usePokemon hook to access the pokemon data in this component
-  */
+export function usePokemon(query) {
   const [pokemon, setPokemon] = useState(null);
+
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${query}`)
       .then(r => r.json())
-      .then(setPokemon);
+      .then(data => setPokemon(data));
+    /* .then(setPokemon) // this also works because the setPokemon function is passed as the callback directly. In this case, the function is 
+    still invoked with the data as an argument, as it is called internally by the .then() method. This shorthand works because the function 
+    setPokemon expects a single argument, which will be automatically passed to it by the .then() method.
+     */
   }, [query]);
 
-  // 🚫 don't worry about the code below here, you shouldn't have to touch it
+  return { data: pokemon };
+}
+
+function Pokemon({ query }) {
+  const { data: pokemon } = usePokemon(query);
   if (!pokemon) return <h3>Loading...</h3>;
 
   return (
@@ -37,7 +37,7 @@ export default function App() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setQuery(e.target.search.value);
+    setQuery(e.target.search.value.toLowerCase());
   }
 
   return (
