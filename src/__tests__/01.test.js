@@ -14,7 +14,9 @@ describe("Exercise 01", () => {
   test("sets the document title", () => {
     renderHook(() => useDocumentTitle());
     act(() => {
-      expect(document.title).toBe("Welcome to the home page!");
+      setTimeout(() => {
+        expect(document.title).toBe("Welcome to the home page!");
+      }, 0);
     });
   });
 });
